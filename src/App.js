@@ -1,20 +1,38 @@
+import { Switch, Route } from 'react-router-dom';
+
 import './App.scss';
 
-import Navigation from './components/Navigation';
-// import MoviesTranding from './components/MoviesTranding';
-// import Movies from './components/Movies';
-// import MovieInfo from './components/MovieInfo';
+import Header from './components/Header';
+import Container from './components/Container';
+
+import HomeView from './views/HomeView';
+import MoviesView from './views/MoviesView';
+import MovieDatailsView from './views/MovieDatailsView';
+import NotFoundView from './views/NotFoundView';
+
 import React from 'react';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <Navigation />
-      {/* <MoviesTranding /> */}
-      {/*<Movies />
-      <MovieInfo /> */}
-    </div>
+    <Container>
+      <Header />
+      <Switch>
+        <Route path="/" exact>
+          <HomeView />
+        </Route>
+
+        <Route path="/movies" exact>
+          <MoviesView />
+        </Route>
+
+        <Route path="/movies/:movieId">
+          <MovieDatailsView />
+        </Route>
+
+        <Route>
+          <NotFoundView />
+        </Route>
+      </Switch>
+    </Container>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { fetchMoviePopular } from '../../services/api-service';
 
-import styles from './MoviesTranding.scss';
+import styles from './MoviesTranding.module.scss';
 
 function MoviesTranding(params) {
   const [movies, setMovies] = useState(null);
@@ -24,11 +24,16 @@ function MoviesTranding(params) {
     <ul className={styles.ImageGallery}>
       {movies.map(item => (
         <li key={item.id}>
-          <img src={`https://image.tmdb.org/t/p/w500${item.poster_path}`} alt={item.title}></img>
-          <a href="/">{item.title}</a>
-          <p>
-            {item.vote_average} / {item.vote_count}
-          </p>
+          <a href={`/movies/${item.id}`}>
+            <img
+              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+              alt={item.title}
+            ></img>
+            {item.title}
+            <p>
+              {item.vote_average} / {item.vote_count}
+            </p>
+          </a>
         </li>
       ))}
     </ul>
