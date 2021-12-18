@@ -21,12 +21,12 @@ export default function App() {
           <HomeView />
         </Route>
 
-        <Route path="/movies" exact>
-          <MoviesView />
-        </Route>
-
         <Route path="/movies/:movieId">
           <MovieDatailsView />
+        </Route>
+
+        <Route path="/movies" exact>
+          <MoviesView />
         </Route>
 
         <Route>

@@ -1,8 +1,10 @@
 // import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 import { fetchMoviePopular } from '../../services/api-service';
 
+import Button from '../Button';
 import styles from './MoviesTranding.module.scss';
 
 function MoviesTranding(params) {
@@ -10,6 +12,7 @@ function MoviesTranding(params) {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const { url } = useRouteMatch();
 
   useEffect(() => {
     fetchMoviePopular(page).then(response => {
@@ -20,42 +23,51 @@ function MoviesTranding(params) {
     });
   }, []);
 
+  useEffect(() => {
+    fetchMoviePopular(page).then(response => {
+      let movieList = [];
+      if (movies && movies.length > 0) {
+        movieList = [...movies, ...response.results];
+      } else {
+        movieList = [...response.results];
+      }
+      setMovies(movieList);
+      window.scrollBy({
+        top: document.documentElement.clientHeight,
+        behavior: 'smooth',
+      });
+    });
+  }, [page]);
+
   return movies ? (
-    <ul className={styles.ImageGallery}>
-      {movies.map(item => (
-        <li key={item.id}>
-          <a href={`/movies/${item.id}`}>
-            <img
-              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-              alt={item.title}
-            ></img>
-            {item.title}
-            <p>
-              {item.vote_average} / {item.vote_count}
-            </p>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className={styles.moviesList}>
+        {movies.map(item => (
+          <li key={item.id} className={styles.movieItem}>
+            <Link to={`${url}/${item.id}`}>
+              <img
+                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                alt={item.title}
+              ></img>
+              <div className={styles.info}>
+                {item.title}
+                <p>
+                  {item.vote_average} / {item.vote_count}
+                </p>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <Button
+        onClick={() => {
+          setPage(status => status + 1);
+        }}
+      />
+    </>
   ) : (
     <p>No films</p>
   );
 }
 
 export default MoviesTranding;
-
-// adult: false
-// backdrop_path: "/VlHt27nCqOuTnuX6bku8QZapzO.jpg"
-// genre_ids: Array(4) [ 28, 12, 878, … ]
-// id: 634649
-// media_type: "movie"
-// original_language: "en"
-// original_title: "Spider-Man: No Way Home"
-// overview: "Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man."
-// popularity: 7962.394
-// poster_path: "/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"
-// release_date: "2021-12-15"
-// title: "Spider-Man: No Way Home"
-// video: false​​​
-// vote_average: 8.8
-// vote_count: 573

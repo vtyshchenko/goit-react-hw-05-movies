@@ -24,17 +24,17 @@ export function fetchMoviesByKeyword(query, page) {
 // ========== Film id
 export function fetchMovieById(movie_id) {
   const LANG = getLanguage();
-  return fetch(`${BASE_URL}/movie/${movie_id}?api_key=${API_KEY}&language=${LANG}`).then(response =>
-    response.json(),
-  );
+  return fetch(
+    `${BASE_URL}/movie/${movie_id}?api_key=${API_KEY}&language=${LANG}`,
+  ).then(response => response.json());
 }
 
 // ========== Film actors
 export function fetchMovieByIdCredits(movie_id) {
   const LANG = getLanguage();
-  return fetch(`${BASE_URL}/movie/${movie_id}/credits?api_key=${API_KEY}&language=${LANG}`).then(
-    response => response.json(),
-  );
+  return fetch(
+    `${BASE_URL}/movie/${movie_id}/credits?api_key=${API_KEY}&language=${LANG}`,
+  ).then(response => response.json());
 }
 
 // ========== Film reviews
@@ -48,11 +48,15 @@ export function fetchMovieByIdReviews(movie_id, page) {
 // ========== Genres
 export function fetchMovieGenres() {
   const LANG = getLanguage();
-  return fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${LANG}`).then(
-    response => {
-      localStorage.setItem('genres', JSON.stringify(response.json()));
-    },
+  console.log(
+    `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${LANG}`,
   );
+  return fetch(
+    `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${LANG}`,
+  ).then(response => {
+    console.log(response);
+    localStorage.setItem('genres', JSON.stringify(response.json()));
+  });
 }
 
 export const themoviedb = {

@@ -1,9 +1,11 @@
 import MoviesTranding from '../components/MoviesTranding';
 
+import styles from './views.module.scss';
+
 export default function HomeView() {
   return (
     <>
-      <h1>HomeView</h1>
+      <h1 className={styles.title}>Tranding today</h1>
       <MoviesTranding />
     </>
   );
