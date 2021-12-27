@@ -1,24 +1,20 @@
-// import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 
 import { fetchMoviePopular } from '../../services/api-service';
 
 import Button from '../Button';
-import styles from './MoviesTranding.module.scss';
+import styles from './HomePage.module.scss';
 
-function MoviesTranding(params) {
+function HomePage() {
   const [movies, setMovies] = useState(null);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
   const { url } = useRouteMatch();
+  console.log('url', url);
 
   useEffect(() => {
     fetchMoviePopular(page).then(response => {
       setPage(response.page);
-      setTotalPages(response.total_pages);
-      setTotalResults(response.total_results);
       setMovies(response.results);
     });
   }, []);
@@ -26,16 +22,19 @@ function MoviesTranding(params) {
   useEffect(() => {
     fetchMoviePopular(page).then(response => {
       let movieList = [];
-      if (movies && movies.length > 0) {
-        movieList = [...movies, ...response.results];
-      } else {
-        movieList = [...response.results];
-      }
+
+      movieList =
+        movies && movies.length > 0
+          ? [...movies, ...response.results]
+          : [...response.results];
+
       setMovies(movieList);
-      window.scrollBy({
-        top: document.documentElement.clientHeight,
-        behavior: 'smooth',
-      });
+
+      page > 1 &&
+        window.scrollBy({
+          top: document.documentElement.clientHeight,
+          behavior: 'smooth',
+        });
     });
   }, [page]);
 
@@ -44,7 +43,7 @@ function MoviesTranding(params) {
       <ul className={styles.moviesList}>
         {movies.map(item => (
           <li key={item.id} className={styles.movieItem}>
-            <Link to={`${url}/${item.id}`}>
+            <Link to={`${url}movies/${item.id}`}>
               <img
                 src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                 alt={item.title}
@@ -70,4 +69,4 @@ function MoviesTranding(params) {
   );
 }
 
-export default MoviesTranding;
+export default HomePage;
