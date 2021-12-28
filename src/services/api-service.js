@@ -48,15 +48,12 @@ export function fetchMovieByIdReviews(movie_id, page) {
 // ========== Genres
 export function fetchMovieGenres() {
   const LANG = getLanguage();
-  console.log(
-    `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${LANG}`,
-  );
+
   return fetch(
     `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${LANG}`,
-  ).then(response => {
-    console.log(response);
-    localStorage.setItem('genres', JSON.stringify(response.json()));
-  });
+  )
+    .then(response => response.json())
+    .catch(console.log);
 }
 
 export const themoviedb = {

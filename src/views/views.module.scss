@@ -1,3 +1,46 @@
+.goBack {
+  font-size: 12px;
+}
+
 .title {
+  margin-top: 20px;
   margin-bottom: 30px;
+}
+
+.movieInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.moviePoster {
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.movieData {
+  margin-top: 50px;
+  width: 65%;
+}
+
+.movieTitile {
+  font-size: 20px;
+  margin-bottom: 30px;
+  padding-left: 20px;
+}
+
+.movieText {
+  margin-bottom: 30px;
+  padding-left: 20px;
+}
+
+.addInfo {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: 1px solid #2a363b;
+  border-bottom: 1px solid #2a363b;
+}
+
+ul {
+  list-style: none;
 }

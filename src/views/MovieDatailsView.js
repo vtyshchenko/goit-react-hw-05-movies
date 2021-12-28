@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 import { fetchMovieById, fetchMovieGenres } from '../services/api-service';
@@ -12,36 +12,59 @@ export default function MovieDetailsView() {
 
   useEffect(() => {
     fetchMovieById(params.movieId).then(setMovie);
-    fetchMovieGenres().catch(console.log);
+    fetchMovieGenres()
+      .then(resp => localStorage.setItem('genres', JSON.stringify(resp)))
+      .catch(console.log);
   }, []);
 
+  let genres = movie ? movie.genres.map(curr => curr.name).join(', ') : '';
+  let companies = movie
+    ? movie.production_companies.map(curr => curr.name).join(', ')
+    : '';
+
+  console.log(movie);
   return movie ? (
     <>
-      <p>GO BACK</p>
-      <h1 className={styles.title}>MovieDetailsView</h1>
-      <div>
+      <Link to="/" className={styles.goBack}>
+        &larr; go back
+      </Link>
+      <div className={styles.movieInfo}>
         <img
+          className={styles.moviePoster}
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.original_title}
+          min-width={'300px'}
+          height={'400px'}
         ></img>
-        <div>
-          <h2>Title</h2>
-          <p>{movie.original_title}</p>
-          <h3>Overview</h3>
-          <p>{movie.overview}</p>
-          <h3>Genres</h3>
-          <p></p>
+        <div className={styles.movieData}>
+          <h1 className={styles.title}>{movie.original_title}</h1>
+          <h2>Overview</h2>
+          <p className={styles.movieText}>{movie.overview}</p>
+          <h2>Genres</h2>
+          <p className={styles.movieText}>{genres}</p>
+          <h2>Popularity</h2>
+          <p className={styles.movieText}>{movie.popularity}</p>
+          <h2>Release date</h2>
+          <p className={styles.movieText}>{movie.release_date}</p>
+          <h2>Vote (average / count)</h2>
+          <p className={styles.movieText}>
+            {movie.vote_average} / {movie.vote_count}
+          </p>
+          <h2>Production companies</h2>
+          <p className={styles.movieText}>{companies}</p>
         </div>
       </div>
-      <h4>Additional information</h4>
-      <ul>
-        <li>
-          <NavLink to="/">Cast</NavLink>
-        </li>
-        <li>
-          <NavLink to="/">Reviews</NavLink>
-        </li>
-      </ul>
+      <div className={styles.addInfo}>
+        <h2>Additional information</h2>
+        <ul>
+          <li>
+            <NavLink to="/">Cast</NavLink>
+          </li>
+          <li>
+            <NavLink to="/">Reviews</NavLink>
+          </li>
+        </ul>
+      </div>
     </>
   ) : (
     <p>No films found on id {params.movieId}</p>
