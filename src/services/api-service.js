@@ -14,8 +14,11 @@ export function fetchMoviePopular(page) {
 }
 
 // ========== Search by keyword
-export function fetchMoviesByKeyword(query, page) {
+export function fetchMoviesByKeyword(query, page = null) {
   const LANG = getLanguage();
+  if (!page) {
+    page = 1;
+  }
   return fetch(
     `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=${LANG}&page=${page}&include_adult=false`,
   ).then(response => response.json());
