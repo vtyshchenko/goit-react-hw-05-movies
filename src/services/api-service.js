@@ -40,6 +40,9 @@ export function fetchMovieByIdCredits(movie_id) {
 // ========== Film reviews
 export function fetchMovieByIdReviews(movie_id, page) {
   const LANG = getLanguage();
+  if (!page) {
+    page = 1;
+  }
   return fetch(
     `${BASE_URL}/movie/${movie_id}/reviews?api_key=${API_KEY}&page=${page}&language=${LANG}`,
   ).then(response => response.json());

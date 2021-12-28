@@ -1,20 +1,29 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useRouteMatch, Route } from 'react-router-dom';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
-import { fetchMovieById, fetchMovieGenres } from '../services/api-service';
+import {
+  fetchMovieById,
+  fetchMovieByIdCredits,
+  fetchMovieByIdReviews,
+} from '../services/api-service';
 
 import styles from './views.module.scss';
 
+import CastView from './CastView';
+import ReviewsView from './ReviewsView';
+
 export default function MovieDetailsView() {
   const [movie, setMovie] = useState(null);
+  const [casts, setCasts] = useState(null);
+  const [review, setReview] = useState(null);
   const params = useParams();
+  const { url, path } = useRouteMatch();
 
   useEffect(() => {
     fetchMovieById(params.movieId).then(setMovie);
-    fetchMovieGenres()
-      .then(resp => localStorage.setItem('genres', JSON.stringify(resp)))
-      .catch(console.log);
+    fetchMovieByIdCredits(params.movieId).then(setCasts);
+    fetchMovieByIdReviews(params.movieId).then(setReview);
   }, []);
 
   let genres = movie ? movie.genres.map(curr => curr.name).join(', ') : '';
@@ -22,7 +31,7 @@ export default function MovieDetailsView() {
     ? movie.production_companies.map(curr => curr.name).join(', ')
     : '';
 
-  console.log(movie);
+  casts && console.log('casts.cast', casts.cast);
   return movie ? (
     <>
       <Link to="/" className={styles.goBack}>
@@ -44,12 +53,12 @@ export default function MovieDetailsView() {
           <p className={styles.movieText}>{genres}</p>
           <h2>Popularity</h2>
           <p className={styles.movieText}>{movie.popularity}</p>
-          <h2>Release date</h2>
-          <p className={styles.movieText}>{movie.release_date}</p>
           <h2>Vote (average / count)</h2>
           <p className={styles.movieText}>
             {movie.vote_average} / {movie.vote_count}
           </p>
+          <h2>Release date</h2>
+          <p className={styles.movieText}>{movie.release_date}</p>
           <h2>Production companies</h2>
           <p className={styles.movieText}>{companies}</p>
         </div>
@@ -58,13 +67,31 @@ export default function MovieDetailsView() {
         <h2>Additional information</h2>
         <ul>
           <li>
-            <NavLink to="/">Cast</NavLink>
+            <NavLink
+              to={`${url}/cast`}
+              className={styles.link}
+              activeClassName={styles.activeLink}
+            >
+              Cast
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/">Reviews</NavLink>
+            <NavLink
+              to={`${url}/review`}
+              className={styles.link}
+              activeClassName={styles.activeLink}
+            >
+              Reviews
+            </NavLink>
           </li>
         </ul>
       </div>
+      <Route path={`${path}/cast`}>
+        {casts && casts.cast && <CastView casts={casts.cast} />}
+      </Route>
+      <Route path={`${path}/review`}>
+        {review && <ReviewsView review={review.results} />}
+      </Route>
     </>
   ) : (
     <p>No films found on id {params.movieId}</p>

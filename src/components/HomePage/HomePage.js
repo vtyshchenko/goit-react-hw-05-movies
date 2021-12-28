@@ -10,7 +10,6 @@ function HomePage() {
   const [movies, setMovies] = useState(null);
   const [page, setPage] = useState(1);
   const { url } = useRouteMatch();
-  // console.log('movies', movies);
 
   useEffect(() => {
     fetchMoviePopular(page).then(response => {
