@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, useLocation } from 'react-router-dom';
 
 import { fetchMoviePopular } from '../../services/api-service';
 
@@ -9,12 +9,15 @@ import styles from './HomePage.module.scss';
 function HomePage() {
   const [movies, setMovies] = useState(null);
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const { url } = useRouteMatch();
+  const locate = useLocation();
 
   useEffect(() => {
     fetchMoviePopular(page).then(response => {
       setPage(response.page);
       setMovies(response.results);
+      setTotal(response.total_pages);
     });
   }, []);
 
@@ -42,7 +45,12 @@ function HomePage() {
       <ul className={styles.moviesList}>
         {movies.map(item => (
           <li key={item.id} className={styles.movieItem}>
-            <Link to={`${url}movies/${item.id}`}>
+            <Link
+              to={{
+                pathname: `${url}movies/${item.id}`,
+                state: { from: locate },
+              }}
+            >
               <img
                 src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                 alt={item.title}
@@ -57,11 +65,13 @@ function HomePage() {
           </li>
         ))}
       </ul>
-      <Button
-        onClick={() => {
-          setPage(status => status + 1);
-        }}
-      />
+      {page < total && (
+        <Button
+          onClick={() => {
+            setPage(status => status + 1);
+          }}
+        />
+      )}
     </>
   ) : (
     <p>No films</p>

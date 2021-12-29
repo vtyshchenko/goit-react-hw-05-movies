@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Link, useRouteMatch, Route } from 'react-router-dom';
+import {
+  NavLink,
+  Link,
+  useRouteMatch,
+  Route,
+  // useHistory,
+  useLocation,
+} from 'react-router-dom';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 import {
@@ -18,6 +25,7 @@ export default function MovieDetailsView() {
   const [casts, setCasts] = useState(null);
   const [review, setReview] = useState(null);
   const params = useParams();
+  const locate = useLocation();
   const { url, path } = useRouteMatch();
 
   useEffect(() => {
@@ -26,15 +34,18 @@ export default function MovieDetailsView() {
     fetchMovieByIdReviews(params.movieId).then(setReview);
   }, []);
 
-  let genres = movie ? movie.genres.map(curr => curr.name).join(', ') : '';
-  let companies = movie
-    ? movie.production_companies.map(curr => curr.name).join(', ')
-    : '';
+  let genres =
+    movie && movie.length > 0
+      ? movie.genres.map(curr => curr.name).join(', ')
+      : 'unknown';
+  let companies =
+    movie && movie.length > 0
+      ? movie.production_companies.map(curr => curr.name).join(', ')
+      : 'unknown';
 
-  casts && console.log('casts.cast', casts.cast);
   return movie ? (
     <>
-      <Link to="/" className={styles.goBack}>
+      <Link className={styles.goBack} to={`${locate?.state?.from ?? '/'}`}>
         &larr; go back
       </Link>
       <div className={styles.movieInfo}>
@@ -97,26 +108,3 @@ export default function MovieDetailsView() {
     <p>No films found on id {params.movieId}</p>
   );
 }
-
-// genre_ids: Array(3) [ 28, 12, 878 ]
-// id: 634649
-// ​​
-// original_language: "en"
-// ​​
-// original_title: "Spider-Man: No Way Home"
-// ​​
-// overview: "Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man."
-// ​​
-// popularity: 11147.352
-// ​​
-// poster_path: "/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"
-// ​​
-// release_date: "2021-12-15"
-// ​​
-// title: "Spider-Man: No Way Home"
-// ​​
-// video: false
-// ​​
-// vote_average: 8.8
-// ​​
-// vote_count: 836

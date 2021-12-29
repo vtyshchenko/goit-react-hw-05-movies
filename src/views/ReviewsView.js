@@ -1,14 +1,20 @@
 import styles from './views.module.scss';
 
 export default function ReviewsView({ review }) {
-  return (
+  return review.length > 0 ? (
     <ul className={styles.reviewList}>
       {review.map(item => {
+        const avatar_path = item.author_details.avatar_path
+          ? item.author_details.avatar_path.substring(1)
+          : '';
         return (
-          <li key={item.name} className={styles.reviewInfo}>
+          <li
+            key={`${item.author}_${item.created_at}`}
+            className={styles.reviewInfo}
+          >
             <img
               className={styles.reviewAvatar}
-              src={item.author_details.avatar_path.substring(1)}
+              src={avatar_path}
               alt={item.author}
               width={'100px'}
               height={'100px'}
@@ -25,5 +31,7 @@ export default function ReviewsView({ review }) {
         );
       })}
     </ul>
+  ) : (
+    <p className={styles.reviewList}>We don't have any review</p>
   );
 }

@@ -1,7 +1,7 @@
 import styles from './views.module.scss';
 
 export default function CastView({ casts }) {
-  return (
+  return casts.length > 0 ? (
     <ul className={styles.castList}>
       {casts.map(item => {
         return (
@@ -34,17 +34,7 @@ export default function CastView({ casts }) {
         );
       })}
     </ul>
+  ) : (
+    <p className={styles.reviewList}>We don't have any casts</p>
   );
 }
-
-// cast_id: 9
-// character: "Thomas A. Anderson / Neo"​​​
-// gender: 2​​​
-// name: "Keanu Reeves"​​​
-// popularity: 92.175​​​
-// profile_path: "/rRdru6REr9i3WIHv2mntpcgxnoY.jpg"
-
-// known_for_department: "Acting"​​​
-// original_name: "Keanu Reeves"​​​
-// id: 6384​​​
-// credit_id: "5d5c58dbc4904800167c7da0"​​​
