@@ -4,7 +4,6 @@ import {
   Link,
   useRouteMatch,
   Route,
-  // useHistory,
   useLocation,
 } from 'react-router-dom';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
@@ -43,9 +42,13 @@ export default function MovieDetailsView() {
       ? movie.production_companies.map(curr => curr.name).join(', ')
       : 'unknown';
 
+  const fromLink = `${locate?.state?.from?.pathname ?? '/'}${
+    locate?.state?.from?.search ?? ''
+  }`;
+
   return movie ? (
     <>
-      <Link className={styles.goBack} to={`${locate?.state?.from ?? '/'}`}>
+      <Link className={styles.goBack} to={fromLink}>
         &larr; go back
       </Link>
       <div className={styles.movieInfo}>
@@ -79,7 +82,10 @@ export default function MovieDetailsView() {
         <ul>
           <li>
             <NavLink
-              to={`${url}/cast`}
+              to={{
+                pathname: `${url}/cast`,
+                state: { from: locate?.state?.from ?? '/' },
+              }}
               className={styles.link}
               activeClassName={styles.activeLink}
             >
@@ -88,7 +94,10 @@ export default function MovieDetailsView() {
           </li>
           <li>
             <NavLink
-              to={`${url}/review`}
+              to={{
+                pathname: `${url}/review`,
+                state: { from: locate?.state?.from ?? '/' },
+              }}
               className={styles.link}
               activeClassName={styles.activeLink}
             >
