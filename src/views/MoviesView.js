@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { fetchMoviesByKeyword } from '../services/api-service';
+import useDebounce from '../helpers/myDebounce';
 
 import Button from '../components/Button';
 import stylesFind from './views.module.scss';
@@ -20,6 +21,7 @@ export default function MoviesView() {
   const history = useHistory();
   const locate = useLocation();
 
+  const debouncedSearch = useDebounce(searchText, 500);
   const handleChange = event => {
     setSearchText(event.target.value);
   };
@@ -30,13 +32,13 @@ export default function MoviesView() {
   }, []);
 
   useEffect(() => {
-    searchText &&
+    debouncedSearch &&
       fetchMoviesByKeyword(searchText, 1).then(response => {
         setMovies(response.results);
         setTotal(response.total_pages);
         history.push({ ...locate, search: `query=${searchText}` });
       });
-  }, [searchText]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     searchText &&
