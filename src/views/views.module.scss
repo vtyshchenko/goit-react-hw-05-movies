@@ -1,15 +1,17 @@
+@import '../helpers/variables.scss';
+
 .link {
   display: inline-block;
-  text-decoration: none;
-  padding: 5px;
-  font-weight: 500;
-  color: #2a363b;
   font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+  color: $color;
+  padding: 5px;
 }
 
 .activeLink {
   composes: link;
-  color: #2196f3;
+  color: $accent-color;
 }
 
 ul {
@@ -57,15 +59,15 @@ ul {
 .addInfo {
   padding-top: 5px;
   padding-bottom: 5px;
-  border-top: 1px solid #2a363b;
-  border-bottom: 1px solid #2a363b;
+  border-top: $border;
+  border-bottom: $border;
 }
 
 .castList {
   display: flex;
   justify-content: space-between;
-  width: 100%;
   flex-wrap: wrap;
+  width: 100%;
   margin-top: 30px;
   margin-right: -20px;
   margin-bottom: -20px;
@@ -74,11 +76,12 @@ ul {
 .castInfo {
   display: flex;
   justify-content: space-between;
+
+  border: $border-movie;
+  border-radius: 5px;
+  width: calc((100% / 3) - 20px);
   margin-right: 20px;
   margin-bottom: 20px;
-  width: calc((100% / 3) - 20px);
-  border: 1px rgb(42, 157, 246) solid;
-  border-radius: 5px;
 }
 
 .castsData {
@@ -109,10 +112,10 @@ ul {
 .reviewInfo {
   display: flex;
   justify-content: space-between;
+  border: $border-movie;
+  border-radius: 5px;
   margin-right: 20px;
   margin-bottom: 20px;
-  border: 1px rgb(42, 157, 246) solid;
-  border-radius: 5px;
 }
 
 .find {

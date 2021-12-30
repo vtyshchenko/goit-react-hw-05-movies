@@ -1,21 +1,24 @@
+@import '../../../helpers/variables.scss';
+
 .movieItem {
+  border: $border-movie;
+  border-radius: 5px;
+
   width: 260px;
   margin-right: 20px;
-  border: 1px rgb(42, 157, 246) solid;
-  border-radius: 5px;
   margin-bottom: 20px;
 
-  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform $anim-duration $anim-timing-function,
+    box-shadow $anim-duration $anim-timing-function;
 
   &:hover,
   &:focus {
     transform: scale(1.04);
-    box-shadow: 0px 3px 18px 2px rgba(42, 157, 246, 0.66);
+    box-shadow: $box-shadow-movie;
   }
 }
 
 .info {
   padding: 5px 5px 5px 15px;
-  color: #000000;
+  color: $text-color;
 }
