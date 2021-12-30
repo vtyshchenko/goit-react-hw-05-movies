@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Link, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { fetchMoviesByKeyword } from '../services/api-service';
 
 import Button from '../components/Button';
-import styles from '../components/HomePage/HomePage.module.scss';
 import stylesFind from './views.module.scss';
+
+const MoviesList = lazy(() =>
+  import(
+    '../components/MovieList/MoviesList.js' /* webpackChunkName: "movie-list" */
+  ),
+);
 
 export default function MoviesView() {
   const [movies, setMovies] = useState(null);
@@ -53,6 +58,7 @@ export default function MoviesView() {
       });
   }, [page]);
 
+  console.log('movies 1__ ', movies);
   return (
     <>
       <label>
@@ -68,34 +74,13 @@ export default function MoviesView() {
       </label>
       {movies && (
         <>
-          <ul className={styles.moviesList}>
-            {movies.map(item => {
-              return (
-                <li key={item.id} className={styles.movieItem}>
-                  <Link
-                    to={{
-                      pathname: `${url}/${item.id}`,
-                      state: { from: locate },
-                    }}
-                  >
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                      alt={item.title}
-                    ></img>
-                    <div className={styles.info}>
-                      {item.title}
-                      <p>
-                        {item.vote_average} / {item.vote_count}
-                      </p>
-                    </div>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <Suspense fallback={<h1>LOADING...</h1>}>
+            <MoviesList movies={movies} locate={locate} url={url} />
+          </Suspense>
           {page < total && (
             <Button
               onClick={() => {
+                console.log('1');
                 setPage(status => status + 1);
               }}
             />

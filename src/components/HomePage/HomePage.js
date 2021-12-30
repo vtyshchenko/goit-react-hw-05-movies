@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Link, useRouteMatch, useLocation } from 'react-router-dom';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { useRouteMatch, useLocation } from 'react-router-dom';
 
 import { fetchMoviePopular } from '../../services/api-service';
 
 import Button from '../Button';
-import styles from './HomePage.module.scss';
+
+const MoviesList = lazy(() =>
+  import('../MovieList/MoviesList.js' /* webpackChunkName: "movie-list" */),
+);
 
 function HomePage() {
   const [movies, setMovies] = useState(null);
@@ -40,31 +43,13 @@ function HomePage() {
     });
   }, [page]);
 
+  console.log('movies 2__ ', movies);
+  console.log('url 2__ ', url);
   return movies ? (
     <>
-      <ul className={styles.moviesList}>
-        {movies.map(item => (
-          <li key={item.id} className={styles.movieItem}>
-            <Link
-              to={{
-                pathname: `${url}movies/${item.id}`,
-                state: { from: locate },
-              }}
-            >
-              <img
-                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                alt={item.title}
-              ></img>
-              <div className={styles.info}>
-                {item.title}
-                <p>
-                  {item.vote_average} / {item.vote_count}
-                </p>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <Suspense fallback={<h1>LOADING...</h1>}>
+        <MoviesList movies={movies} locate={locate} url={`${url}`} />
+      </Suspense>
       {page < total && (
         <Button
           onClick={() => {

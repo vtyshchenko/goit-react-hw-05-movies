@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
   NavLink,
   Link,
@@ -16,8 +16,12 @@ import {
 
 import styles from './views.module.scss';
 
-import CastView from './CastView';
-import ReviewsView from './ReviewsView';
+const CastView = lazy(() =>
+  import('./CastView.js' /* webpackChunkName: "cast-view" */),
+);
+const ReviewsView = lazy(() =>
+  import('./ReviewsView.js' /* webpackChunkName: "review-view" */),
+);
 
 export default function MovieDetailsView() {
   const [movie, setMovie] = useState(null);
@@ -106,12 +110,14 @@ export default function MovieDetailsView() {
           </li>
         </ul>
       </div>
-      <Route path={`${path}/cast`}>
-        {casts && casts.cast && <CastView casts={casts.cast} />}
-      </Route>
-      <Route path={`${path}/review`}>
-        {review && <ReviewsView review={review.results} />}
-      </Route>
+      <Suspense fallback={<h1>LOADING...</h1>}>
+        <Route path={`${path}/cast`}>
+          {casts && casts.cast && <CastView casts={casts.cast} />}
+        </Route>
+        <Route path={`${path}/review`}>
+          {review && <ReviewsView review={review.results} />}
+        </Route>
+      </Suspense>
     </>
   ) : (
     <p>No films found on id {params.movieId}</p>

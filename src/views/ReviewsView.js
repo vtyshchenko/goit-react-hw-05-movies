@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './views.module.scss';
 
 export default function ReviewsView({ review }) {
@@ -35,3 +36,14 @@ export default function ReviewsView({ review }) {
     <p className={styles.reviewList}>We don't have any review</p>
   );
 }
+
+ReviewsView.propTypes = {
+  review: PropTypes.arrayOf(
+    PropTypes.shape({
+      author_details: PropTypes.object.isRequired,
+      author: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+    }),
+  ),
+};

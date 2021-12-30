@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import styles from './views.module.scss';
 
 export default function CastView({ casts }) {
@@ -38,3 +40,15 @@ export default function CastView({ casts }) {
     <p className={styles.reviewList}>We don't have any casts</p>
   );
 }
+
+CastView.propTypes = {
+  casts: PropTypes.arrayOf(
+    PropTypes.shape({
+      character: PropTypes.string,
+      popularity: PropTypes.number,
+      gender: PropTypes.number,
+      profile_path: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ),
+};
