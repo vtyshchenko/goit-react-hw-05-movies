@@ -7,7 +7,6 @@ const MovieInfo = lazy(() =>
 );
 
 export default function MoviesList({ movies, locate, url }) {
-  console.log(url);
   return (
     <>
       <ul className={styles.moviesList}>

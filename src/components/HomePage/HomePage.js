@@ -43,12 +43,10 @@ function HomePage() {
     });
   }, [page]);
 
-  console.log('movies 2__ ', movies);
-  console.log('url 2__ ', url);
   return movies ? (
     <>
       <Suspense fallback={<h1>LOADING...</h1>}>
-        <MoviesList movies={movies} locate={locate} url={`${url}`} />
+        <MoviesList movies={movies} locate={locate} url={`${url}movies`} />
       </Suspense>
       {page < total && (
         <Button

@@ -58,7 +58,6 @@ export default function MoviesView() {
       });
   }, [page]);
 
-  console.log('movies 1__ ', movies);
   return (
     <>
       <label>
@@ -80,7 +79,6 @@ export default function MoviesView() {
           {page < total && (
             <Button
               onClick={() => {
-                console.log('1');
                 setPage(status => status + 1);
               }}
             />

@@ -4,9 +4,8 @@ import styles from './MovieInfo.module.scss';
 
 export default function MovieInfo({ item, locate, url }) {
   return (
-    <li key={`id${item.id}`} className={styles.movieItem}>
+    <li className={styles.movieItem}>
       <Link
-        key={`id1${item.id}`}
         to={{
           pathname: `${url}/${item.id}`,
           state: { from: locate },

@@ -47,7 +47,7 @@ CastView.propTypes = {
       character: PropTypes.string,
       popularity: PropTypes.number,
       gender: PropTypes.number,
-      profile_path: PropTypes.string.isRequired,
+      profile_path: PropTypes.string,
       name: PropTypes.string.isRequired,
     }),
   ),

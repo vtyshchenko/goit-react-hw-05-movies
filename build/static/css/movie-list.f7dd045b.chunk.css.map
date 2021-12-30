@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/components/MovieList/MoviesList.module.scss"],"names":[],"mappings":"AAAA,8BACE,YAAA,CACA,cAAA,CACA,6BAAA,CACA,eAAA,CACA,kBAAA","file":"movie-list.f7dd045b.chunk.css","sourcesContent":[".moviesList {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  list-style: none;\n  margin-right: -20px;\n}\n"]}
