@@ -15,6 +15,7 @@ import {
 } from '../services/api-service';
 
 import styles from './views.module.scss';
+import NoPoster from '../images/no-poster.png';
 
 const CastView = lazy(() =>
   import('./CastView.js' /* webpackChunkName: "cast-view" */),
@@ -50,6 +51,10 @@ export default function MovieDetailsView() {
     locate?.state?.from?.search ?? ''
   }`;
 
+  const imageSrc =
+    movie && movie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      : NoPoster;
   return movie ? (
     <>
       <Link className={styles.goBack} to={fromLink}>
@@ -58,7 +63,7 @@ export default function MovieDetailsView() {
       <div className={styles.movieInfo}>
         <img
           className={styles.moviePoster}
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          src={imageSrc}
           alt={movie.original_title}
           min-width={'300px'}
           height={'400px'}

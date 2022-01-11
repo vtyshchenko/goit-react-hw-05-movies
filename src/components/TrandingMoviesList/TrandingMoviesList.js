@@ -1,64 +1,48 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { useRouteMatch, useLocation } from 'react-router-dom';
+import { useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 
+import FilmPagination from '../FilmPagination';
 import { fetchMoviePopular } from '../../services/api-service';
-
-import Button from '../Button';
 
 const MoviesList = lazy(() =>
   import('../MovieList/MoviesList.js' /* webpackChunkName: "movie-list" */),
 );
 
-function HomePage() {
+function TrandingMoviesList() {
   const [movies, setMovies] = useState(null);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const { url } = useRouteMatch();
   const locate = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
-    fetchMoviePopular(page).then(response => {
+    const pageNumber = new URLSearchParams(locate.search).get('page') ?? 1;
+    setPage(pageNumber ? pageNumber : 1);
+    fetchMoviePopular(pageNumber).then(response => {
       setPage(response.page);
       setMovies(response.results);
       setTotal(response.total_pages);
+      const searchPage = pageNumber ? `page=${pageNumber}` : '';
+
+      history.push({ ...locate, search: `${searchPage}` });
     });
   }, []);
 
   useEffect(() => {
-    fetchMoviePopular(page).then(response => {
-      let movieList = [];
-
-      movieList =
-        movies && movies.length > 0
-          ? [...movies, ...response.results]
-          : [...response.results];
-
-      setMovies(movieList);
-
-      page > 1 &&
-        window.scrollBy({
-          top: document.documentElement.clientHeight,
-          behavior: 'smooth',
-        });
-    });
+    fetchMoviePopular(page).then(response => setMovies(response.results));
   }, [page]);
 
   return movies ? (
     <>
       <Suspense fallback={<h1>LOADING...</h1>}>
         <MoviesList movies={movies} locate={locate} url={`${url}movies`} />
+        <FilmPagination pageTotal={total} page={page} setPage={setPage} />
       </Suspense>
-      {page < total && (
-        <Button
-          onClick={() => {
-            setPage(status => status + 1);
-          }}
-        />
-      )}
     </>
   ) : (
     <p>No films</p>
   );
 }
 
-export default HomePage;
+export default TrandingMoviesList;

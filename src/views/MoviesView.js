@@ -3,7 +3,7 @@ import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { fetchMoviesByKeyword } from '../services/api-service';
 import useDebounce from '../helpers/myDebounce';
 
-import Button from '../components/Button';
+import FilmPagination from '../components/FilmPagination';
 import stylesFind from './views.module.scss';
 
 const MoviesList = lazy(() =>
@@ -20,44 +20,45 @@ export default function MoviesView() {
   const { url } = useRouteMatch();
   const history = useHistory();
   const locate = useLocation();
+  const [isFetchDone, setIsFetchDone] = useState(false);
 
   const debouncedSearch = useDebounce(searchText, 500);
   const handleChange = event => {
     setSearchText(event.target.value);
+    !event.target.value && setMovies(null);
+    setPage(1);
+    setIsFetchDone(false);
   };
 
   useEffect(() => {
     const text = new URLSearchParams(locate.search).get('query');
+    const pageNumber = new URLSearchParams(locate.search).get('page');
     text && setSearchText(text);
+    pageNumber && setPage(pageNumber);
   }, []);
 
+  const getMovies = pageNumber => {
+    setPage(Number(pageNumber));
+    return fetchMoviesByKeyword(searchText, pageNumber).then(response => {
+      setMovies(response.results);
+      setTotal(response.total_pages);
+      setIsFetchDone(true);
+      let searchQuery = searchText ? `query=${searchText}` : '';
+      const searchPage = pageNumber ? `page=${pageNumber}` : '';
+      searchQuery = searchQuery
+        ? searchPage && `${searchQuery}&${searchPage}`
+        : searchQuery;
+
+      history.push({ ...locate, search: `${searchQuery}` });
+    });
+  };
+
   useEffect(() => {
-    debouncedSearch &&
-      fetchMoviesByKeyword(searchText, 1).then(response => {
-        setMovies(response.results);
-        setTotal(response.total_pages);
-        history.push({ ...locate, search: `query=${searchText}` });
-      });
+    searchText && debouncedSearch && getMovies(page);
   }, [debouncedSearch]);
 
   useEffect(() => {
-    searchText &&
-      fetchMoviesByKeyword(searchText, page).then(response => {
-        let movieList = [];
-
-        movieList =
-          movies && movies.length > 0
-            ? [...movies, ...response.results]
-            : [...response.results];
-
-        setMovies(movieList);
-
-        page > 1 &&
-          window.scrollBy({
-            top: document.documentElement.clientHeight,
-            behavior: 'smooth',
-          });
-      });
+    searchText && getMovies(page);
   }, [page]);
 
   return (
@@ -65,7 +66,7 @@ export default function MoviesView() {
       <label>
         Find movies
         <input
-          className={stylesFind.find}
+          className={isFetchDone ? stylesFind.findDone : stylesFind.find}
           type="text"
           name="query"
           value={searchText}
@@ -73,19 +74,16 @@ export default function MoviesView() {
           onChange={handleChange}
         />
       </label>
-      {movies && (
+      {movies && movies.length > 0 ? (
         <>
           <Suspense fallback={<h1>LOADING...</h1>}>
             <MoviesList movies={movies} locate={locate} url={url} />
+
+            <FilmPagination pageTotal={total} page={page} setPage={setPage} />
           </Suspense>
-          {page < total && (
-            <Button
-              onClick={() => {
-                setPage(status => status + 1);
-              }}
-            />
-          )}
         </>
+      ) : (
+        searchText && <h2>Nothing found on query "{searchText}"</h2>
       )}
     </>
   );
