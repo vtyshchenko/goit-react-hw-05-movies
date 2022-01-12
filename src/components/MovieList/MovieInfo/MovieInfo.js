@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import styles from './MovieInfo.module.scss';
 import NoPoster from '../../../images/no-poster.png';
@@ -27,3 +28,9 @@ export default function MovieInfo({ item, locate, url }) {
     </li>
   );
 }
+
+MovieInfo.propTypes = {
+  item: PropTypes.object.isRequired,
+  locate: PropTypes.object,
+  url: PropTypes.string,
+};

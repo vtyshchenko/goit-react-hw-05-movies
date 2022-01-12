@@ -1,11 +1,15 @@
 import { Pagination, Stack, PaginationItem } from '@mui/material';
 import { useHistory, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import styles from './FilmPagination.module.scss';
 
-export default function FilmPagination({ pageTotal, page = 1, setPage }) {
+export default function FilmPagination({ pageTotal, page, setPage }) {
   const locate = useLocation();
   const history = useHistory();
+  if (!page) {
+    page = 1;
+  }
 
   const hendlerSubmit = (e, value) => {
     setPage(value);
@@ -35,3 +39,9 @@ export default function FilmPagination({ pageTotal, page = 1, setPage }) {
     </>
   );
 }
+
+FilmPagination.propTypes = {
+  pageTotal: PropTypes.number.isRequired,
+  page: PropTypes.number,
+  setPage: PropTypes.func.isRequired,
+};

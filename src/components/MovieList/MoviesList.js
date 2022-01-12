@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import PropTypes from 'prop-types';
 
 import styles from './MoviesList.module.scss';
 
@@ -24,3 +25,9 @@ export default function MoviesList({ movies, locate, url }) {
     </>
   );
 }
+
+MoviesList.propTypes = {
+  movies: PropTypes.array.isRequired,
+  locate: PropTypes.object,
+  url: PropTypes.string,
+};
